@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import Loader from '../../components/Loader';
 import "./Layout1.css";
 
 const Layout1 = () => {
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = e => {
+        setLoading(true)
         e.preventDefault();
         const form = e.target;
         const name = form.name.value;
@@ -17,7 +21,25 @@ const Layout1 = () => {
             email,
             phone
         }
-        console.log(userInfo);
+        // console.log(userInfo);
+
+        fetch('http://localhost:5000/userInfo', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(userInfo),
+        })
+            .then(response => response.json())
+            .then(data => {
+                toast.success('Your information has been saved');
+                form.reset();
+                setLoading(false);
+            })
+            .catch(error => {
+                toast.error('Please try again');
+                setLoading(false);
+            });
     }
 
     return (
@@ -44,7 +66,11 @@ const Layout1 = () => {
             </div>
 
             <div className='flex justify-end'>
-                <button className='bg-blue-500 font-semibold px-5 py-1 rounded-sm' type='submit'>Submit</button>
+                {
+                    loading ? <Loader />
+                        :
+                        <button className='bg-blue-500 font-semibold px-5 py-1 rounded-sm' type='submit'>Submit</button>
+                }
             </div>
         </form>
     );
