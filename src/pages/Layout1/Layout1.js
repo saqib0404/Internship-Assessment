@@ -6,6 +6,11 @@ import "./Layout1.css";
 const Layout1 = () => {
     const [loading, setLoading] = useState(false);
 
+    function playSound() {
+        const audio = new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3%27');
+        audio.play();
+    }
+
     const handleSubmit = e => {
         setLoading(true)
         e.preventDefault();
@@ -21,9 +26,8 @@ const Layout1 = () => {
             email,
             phone
         }
-        // console.log(userInfo);
 
-        fetch('http://localhost:5000/userInfo', {
+        fetch('https://internship-assessment-server-one.vercel.app/userInfo', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -32,6 +36,7 @@ const Layout1 = () => {
         })
             .then(response => response.json())
             .then(data => {
+                playSound();
                 toast.success('Your information has been saved');
                 form.reset();
                 setLoading(false);
@@ -64,7 +69,7 @@ const Layout1 = () => {
                 <label className='font-semibold text-lg'>Phone Number:</label>
                 <input name='phone' type="number" className='input-field w-60 px-1' placeholder='You Number' required />
             </div>
-
+            {/* Submit btn */}
             <div className='flex justify-end'>
                 {
                     loading ? <Loader />
